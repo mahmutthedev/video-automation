@@ -1,8 +1,11 @@
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 
-if (ffmpegPath) {
-  ffmpeg.setFfmpegPath(ffmpegPath);
+// Prefer system ffmpeg (has full filter support incl. drawtext/libfreetype).
+// Fall back to ffmpeg-static for local dev without system ffmpeg in PATH.
+const resolvedFfmpegPath = process.env.FFMPEG_PATH || ffmpegPath;
+if (resolvedFfmpegPath) {
+  ffmpeg.setFfmpegPath(resolvedFfmpegPath);
 }
 
 const FONT_SIZE = 58;

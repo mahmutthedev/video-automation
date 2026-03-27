@@ -17,6 +17,7 @@ RUN npm run build
 RUN mkdir -p /app/data/uploads/hooks /app/data/uploads/rests /app/data/output
 
 ENV DATA_DIR=/app/data
+ENV FFMPEG_PATH=/usr/bin/ffmpeg
 
 EXPOSE 3001
 

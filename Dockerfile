@@ -1,7 +1,7 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# ffmpeg-static bundles its own binary but needs these for it to run on Alpine
-RUN apk add --no-cache ffmpeg
+# Install ffmpeg with full codec/filter support (includes libfreetype for drawtext)
+RUN apt-get update && apt-get install -y ffmpeg --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

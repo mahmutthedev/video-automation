@@ -13,8 +13,10 @@ COPY . .
 # Build the React frontend
 RUN npm run build
 
-# Persistent data directories
-RUN mkdir -p uploads/hooks uploads/rests output
+# Default data dir for local/fallback use
+RUN mkdir -p /app/data/uploads/hooks /app/data/uploads/rests /app/data/output
+
+ENV DATA_DIR=/app/data
 
 EXPOSE 3001
 

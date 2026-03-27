@@ -101,10 +101,11 @@ async function runAutoPost(): Promise<AutoRunResult> {
 
   fs.mkdirSync(outputDir, { recursive: true });
 
-  // Generate all variations in parallel
+  // Generate variations sequentially to avoid OOM (each FFmpeg process is memory-heavy)
   type VariationResult = { videoPath: string; hookText: string; caption: string };
 
-  const generateVariation = async (i: number): Promise<VariationResult> => {
+  const variations: VariationResult[] = [];
+  for (let i = 0; i < variationsPerCombo; i++) {
     const hookText = await generateHookText(context);
     const caption = await generateCaption(context, hookText);
 
@@ -120,12 +121,8 @@ async function runAutoPost(): Promise<AutoRunResult> {
       outputPath.replace(/\.[^.]+$/, ".json"),
       JSON.stringify({ hookText, caption }, null, 2)
     );
-    return { videoPath: outputPath, hookText, caption };
-  };
-
-  const variations = await Promise.all(
-    Array.from({ length: variationsPerCombo }, (_, i) => generateVariation(i))
-  );
+    variations.push({ videoPath: outputPath, hookText, caption });
+  }
 
   // Evaluate — pick the best variation
   const winnerIdx = await evaluateBestVariation(

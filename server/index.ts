@@ -8,22 +8,21 @@ import { generateRouter } from "./routes/generate";
 import { settingsRouter } from "./routes/settings";
 import { instagramRouter } from "./routes/instagram";
 import { autoRouter, initScheduler } from "./routes/auto";
+import { ensureDirs, PATHS } from "./lib/paths";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
 app.use(cors());
 app.use(express.json());
 
-// Ensure output directory exists
-const outputDir = path.join(__dirname, "..", "output");
-fs.mkdirSync(outputDir, { recursive: true });
+ensureDirs();
 
 // Serve output video files with range request support for proper browser playback
 app.get("/api/files/output/:filename", (req, res) => {
-  const filePath = path.join(outputDir, req.params.filename);
+  const filePath = path.join(PATHS.output, req.params.filename);
   if (!fs.existsSync(filePath)) {
     res.status(404).json({ error: "File not found" });
     return;

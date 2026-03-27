@@ -6,11 +6,12 @@ import {
   getInstagramAccountId,
   publishReel,
 } from "../lib/instagram";
+import { PATHS } from "../lib/paths";
 
 const router = Router();
 
-const SETTINGS_FILE = path.join(__dirname, "..", "..", "settings.json");
-const outputDir = path.join(__dirname, "..", "..", "output");
+const SETTINGS_FILE = PATHS.settings;
+const outputDir = PATHS.output;
 
 function loadSettings() {
   if (!fs.existsSync(SETTINGS_FILE)) return {};

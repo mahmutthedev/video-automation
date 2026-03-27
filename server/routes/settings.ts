@@ -1,10 +1,10 @@
 import { Router } from "express";
-import path from "path";
 import fs from "fs";
+import { PATHS } from "../lib/paths";
 
 const router = Router();
 
-const SETTINGS_FILE = path.join(__dirname, "..", "..", "settings.json");
+const SETTINGS_FILE = PATHS.settings;
 
 interface Settings {
   hooksFolder: string;

@@ -4,11 +4,12 @@ import fs from "fs";
 import { generateHookText, generateCaption, evaluateBestVariation } from "../lib/llm";
 import { combineVideos } from "../lib/ffmpeg";
 import { publishReel } from "../lib/instagram";
+import { PATHS } from "../lib/paths";
 
 const router = Router();
 
-const SETTINGS_FILE = path.join(__dirname, "..", "..", "settings.json");
-const outputDir = path.join(__dirname, "..", "..", "output");
+const SETTINGS_FILE = PATHS.settings;
+const outputDir = PATHS.output;
 const VIDEO_EXTENSIONS = new Set([".mp4", ".mov", ".avi", ".mkv", ".webm"]);
 
 // ── Scheduler state ──────────────────────────────────────────────────────────

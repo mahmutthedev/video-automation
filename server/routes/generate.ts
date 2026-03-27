@@ -4,11 +4,12 @@ import fs from "fs";
 import os from "os";
 import { generateHookText, generateCaption } from "../lib/llm";
 import { combineVideos } from "../lib/ffmpeg";
+import { PATHS } from "../lib/paths";
 
 const router = Router();
 
 const VIDEO_EXTENSIONS = new Set([".mp4", ".mov", ".avi", ".mkv", ".webm"]);
-const outputDir = path.join(__dirname, "..", "..", "output");
+const outputDir = PATHS.output;
 
 interface Job {
   id: string;

@@ -2,16 +2,16 @@ import { Router } from "express";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
+import { PATHS } from "../lib/paths";
 
 const router = Router();
 
 const VIDEO_EXTENSIONS = new Set([".mp4", ".mov", ".avi", ".mkv", ".webm"]);
-const outputDir = path.join(__dirname, "..", "..", "output");
+const outputDir = PATHS.output;
 
-// Upload directories (used when hosting remotely)
 const UPLOAD_DIRS: Record<string, string> = {
-  hooks: path.join(__dirname, "..", "..", "uploads", "hooks"),
-  rests: path.join(__dirname, "..", "..", "uploads", "rests"),
+  hooks: PATHS.uploads.hooks,
+  rests: PATHS.uploads.rests,
 };
 
 const upload = multer({

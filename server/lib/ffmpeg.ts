@@ -82,9 +82,10 @@ export function combineVideos(
       ])
       // Video from our filter chain, audio straight from the rest video (untouched)
       .outputOptions(["-map", "[vout]", "-map", "1:a"])
-      .outputOptions(["-c:v", "libx264", "-preset", "fast", "-crf", "23"])
+      .outputOptions(["-c:v", "libx264", "-preset", "ultrafast", "-crf", "28"])
       .outputOptions(["-c:a", "aac", "-b:a", "128k"])
       .outputOptions(["-movflags", "+faststart"])
+      .outputOptions(["-threads", "1"])
       .output(outputPath)
       .on("end", () => resolve(outputPath))
       .on("error", (err: Error) =>

@@ -67,7 +67,7 @@ async function runAutoPost(): Promise<AutoRunResult> {
   const restsFolder = settings.restsFolder as string | undefined;
   const context = (settings.context as string) || "";
   const hookDuration = (settings.hookDuration as number) || 4;
-  const variationsPerCombo = (settings.variationsPerCombo as number) || 5;
+  const variationsPerCombo = (settings.variationsPerCombo as number) || 3;
   const igAccessToken = settings.igAccessToken as string | undefined;
   const igUserId = settings.igUserId as string | undefined;
 

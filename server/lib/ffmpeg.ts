@@ -29,7 +29,7 @@ function wrapText(text: string, maxWidth: number): string[] {
 function escapeDrawText(text: string): string {
   return text
     .replace(/\\/g, "\\\\\\\\")
-    .replace(/'/g, "\u2019")
+    .replace(/['\u2018\u2019\u02bc]/g, "")  // strip all apostrophe variants
     .replace(/:/g, "\\:")
     .replace(/%/g, "\\%");
 }

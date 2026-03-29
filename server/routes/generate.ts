@@ -5,6 +5,7 @@ import os from "os";
 import { generateHookText, generateCaption } from "../lib/llm";
 import { combineVideos } from "../lib/ffmpeg";
 import { PATHS } from "../lib/paths";
+import { resolveVideoSourceDir } from "../lib/video-sources";
 
 const router = Router();
 
@@ -51,18 +52,20 @@ router.post("/start", (req, res) => {
     return;
   }
 
-  const hooks = getVideoFiles(path.resolve(hooksFolder));
-  const rests = getVideoFiles(path.resolve(restsFolder));
+  const resolvedHooksFolder = resolveVideoSourceDir(hooksFolder, "hooks");
+  const resolvedRestsFolder = resolveVideoSourceDir(restsFolder, "rests");
+  const hooks = getVideoFiles(resolvedHooksFolder);
+  const rests = getVideoFiles(resolvedRestsFolder);
 
   if (hooks.length === 0) {
     res
       .status(400)
-      .json({ error: `No video files found in hooks folder: ${hooksFolder}` });
+      .json({ error: `No video files found in hooks folder: ${resolvedHooksFolder}` });
     return;
   }
   if (rests.length === 0) {
     res.status(400).json({
-      error: `No video files found in rests folder: ${restsFolder}`,
+      error: `No video files found in rests folder: ${resolvedRestsFolder}`,
     });
     return;
   }

@@ -5,6 +5,7 @@ import { generateHookText, generateCaption, evaluateBestVariation } from "../lib
 import { combineVideos } from "../lib/ffmpeg";
 import { publishReel } from "../lib/instagram";
 import { PATHS } from "../lib/paths";
+import { resolveVideoSourceDir, sanitizeSavedVideoSource } from "../lib/video-sources";
 
 const router = Router();
 
@@ -63,23 +64,28 @@ export interface AutoRunResult {
 async function runAutoPost(): Promise<AutoRunResult> {
   const settings = loadSettings();
 
-  const hooksFolder = settings.hooksFolder as string | undefined;
-  const restsFolder = settings.restsFolder as string | undefined;
+  const hooksFolder = sanitizeSavedVideoSource(settings.hooksFolder as string | undefined, "hooks");
+  const restsFolder = sanitizeSavedVideoSource(settings.restsFolder as string | undefined, "rests");
   const context = (settings.context as string) || "";
   const hookDuration = (settings.hookDuration as number) || 4;
   const variationsPerCombo = (settings.variationsPerCombo as number) || 3;
   const igAccessToken = settings.igAccessToken as string | undefined;
   const igUserId = settings.igUserId as string | undefined;
 
-  if (!hooksFolder || !restsFolder)
-    throw new Error("hooksFolder and restsFolder must be configured in Settings.");
   if (!igAccessToken || !igUserId)
     throw new Error("Instagram is not connected. Connect it in the Instagram section first.");
 
-  const hooks = getVideoFiles(hooksFolder);
-  const rests = getVideoFiles(restsFolder);
-  if (hooks.length === 0) throw new Error(`No videos found in hooks folder: ${hooksFolder}`);
-  if (rests.length === 0) throw new Error(`No videos found in rests folder: ${restsFolder}`);
+  const resolvedHooksFolder = resolveVideoSourceDir(hooksFolder, "hooks");
+  const resolvedRestsFolder = resolveVideoSourceDir(restsFolder, "rests");
+  const hooks = getVideoFiles(resolvedHooksFolder);
+  const rests = getVideoFiles(resolvedRestsFolder);
+  if (hooks.length === 0) throw new Error(`No videos found in hooks folder: ${resolvedHooksFolder}`);
+  if (rests.length === 0) throw new Error(`No videos found in rests folder: ${resolvedRestsFolder}`);
+
+  saveSettings({
+    hooksFolder: resolvedHooksFolder,
+    restsFolder: resolvedRestsFolder,
+  });
 
   // Build all combos
   type Combo = { hook: string; rest: string };

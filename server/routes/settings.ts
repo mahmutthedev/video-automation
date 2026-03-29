@@ -1,6 +1,7 @@
 import { Router } from "express";
 import fs from "fs";
 import { PATHS } from "../lib/paths";
+import { sanitizeSavedVideoSource } from "../lib/video-sources";
 
 const router = Router();
 
@@ -23,7 +24,12 @@ const DEFAULTS: Settings = {
 function load(): Settings {
   if (!fs.existsSync(SETTINGS_FILE)) return { ...DEFAULTS };
   try {
-    return { ...DEFAULTS, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, "utf-8")) };
+    const parsed = { ...DEFAULTS, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, "utf-8")) };
+    return {
+      ...parsed,
+      hooksFolder: sanitizeSavedVideoSource(parsed.hooksFolder, "hooks"),
+      restsFolder: sanitizeSavedVideoSource(parsed.restsFolder, "rests"),
+    };
   } catch {
     return { ...DEFAULTS };
   }
